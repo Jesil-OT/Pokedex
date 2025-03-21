@@ -2,6 +2,7 @@ package com.jesil.pokedex.di
 
 import com.jesil.pokedex.data.remote.PokeApi
 import com.jesil.pokedex.repository.PokemonRepo
+import com.jesil.pokedex.ui.pokemondetail.PokemonDetailViewModel
 import com.jesil.pokedex.ui.pokemonlist.PokemonListViewModel
 import com.jesil.pokedex.util.Constants.BASE_URL
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -23,5 +24,6 @@ val appModule = module {
     single { PokemonRepo(get()) }
 
     viewModelOf(::PokemonListViewModel) bind PokemonListViewModel::class
+    viewModelOf(::PokemonDetailViewModel) bind PokemonDetailViewModel::class
 
 }

@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.jesil.pokedex.ui.pokemondetail.PokemonDetailScreen
 import com.jesil.pokedex.ui.pokemonlist.PokemonListScreen
 import com.jesil.pokedex.ui.theme.PokedexTheme
 
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     composable(
-                        route = "pokemon_detail_screen/{dominantColor}/{pokemonName}",
+                        route = "pokemon_detail_screen/{dominantColor}/{pokemonName}/{pokemonNumber}",
                         arguments = listOf(
                             navArgument("dominantColor") {
                                 // to tell its data type is an int
@@ -37,6 +38,9 @@ class MainActivity : ComponentActivity() {
                             navArgument("pokemonName") {
                                 // to tell its data type is a string
                                 type = NavType.StringType
+                            },
+                            navArgument("pokemonNumber") {
+                                type = NavType.IntType
                             }
                         )
                     ) {
@@ -48,6 +52,16 @@ class MainActivity : ComponentActivity() {
                             it.arguments?.getString("pokemonName")
                         }
 
+                        val pokemonNumber = remember {
+                            it.arguments?.getInt("pokemonNumber")
+                        }
+
+                        PokemonDetailScreen(
+                            dominantColor = dominantColor,
+                            pokemonName = pokemonName?.lowercase() ?: "",
+                            pokemonNumber = pokemonNumber ?: 0,
+                            navController = navController
+                        )
 
                     }
                 }

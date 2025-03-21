@@ -42,7 +42,7 @@ import com.jesil.pokedex.data.models.PokedexListEntry
 fun PokedexEntry(
     modifier: Modifier = Modifier,
     entry: PokedexListEntry,
-    onClick: (PokedexListEntry) -> Unit,
+    onClick: () -> Unit,
     dominantColor: Color,
     configDominantColor: (Drawable) -> Unit
 ) {
@@ -54,7 +54,7 @@ fun PokedexEntry(
             .clip(RoundedCornerShape(10.dp))
             .aspectRatio(1f)
             .background(dominantColor)
-            .clickable { onClick(entry) },
+            .clickable { onClick() },
         contentAlignment = Alignment.Center,
         content = {
             Column {
@@ -120,8 +120,7 @@ fun PokedexEntry(
                     }
                 )
                 if (imageLoading.value) {
-                    CircularProgressIndicator(
-                        color = MaterialTheme.colorScheme.background,
+                    AnimatedProgressIndicator(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .scale(0.5f)

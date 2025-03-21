@@ -98,6 +98,7 @@ class PokemonListViewModel(
                     isLoading.value = false
                     pokemonList.value += pokedexEntry
                 }
+                is Resource.Loading -> {}
             }
         }
     }

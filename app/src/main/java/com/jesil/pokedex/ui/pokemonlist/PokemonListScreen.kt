@@ -1,5 +1,6 @@
 package com.jesil.pokedex.ui.pokemonlist
 
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,7 +38,9 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.google.accompanist.imageloading.rememberDrawablePainter
 import com.jesil.pokedex.R
+import com.jesil.pokedex.ui.components.AnimatedProgressIndicator
 import com.jesil.pokedex.ui.components.PokedexEntry
 import com.jesil.pokedex.ui.components.RetrySection
 import com.jesil.pokedex.ui.components.SearchBar
@@ -104,7 +109,7 @@ fun PokemonListScreen(
                                 },
                                 onClick = {
                                     navController.navigate(
-                                        "pokemon_detail_screen/${dominantColor.toString()}/${pokemon.pokemonName}"
+                                        "pokemon_detail_screen/${dominantColor.toArgb()}/${pokemon.pokemonName}/${pokemon.number}"
                                     )
                                 },
                                 dominantColor = dominantColor
@@ -117,9 +122,8 @@ fun PokemonListScreen(
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         content = {
-                            CircularProgressIndicator(
-                                modifier = Modifier.align(alignment = Alignment.Center),
-                                color = MaterialTheme.colorScheme.onSurface
+                            AnimatedProgressIndicator(
+                                modifier = Modifier.align(alignment = Alignment.Center)
                             )
                         }
                     )

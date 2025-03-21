@@ -79,8 +79,8 @@ dependencies {
     //Coil Image
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-    implementation("com.google.accompanist:accompanist-coil:0.10.0")
+    implementation(libs.accompanist.coil)
 //    implementation("dev.chrisbanes.accompanist:accompanist-coil:0.10.0")
-
+    implementation(libs.lottie.compose)
 
 }

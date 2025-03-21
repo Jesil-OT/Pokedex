@@ -3,4 +3,7 @@
     <string name="pokemon_logo">Pokemon Logo</string>
     <string name="search_for_pokemon">Search for Pokemon</string>
     <string name="more">More</string>
+    <string name="go_back">Go back</string>
+    <string name="loading">Loading</string>
+    <string name="base_stats">Base Stats</string>
 </resources>
