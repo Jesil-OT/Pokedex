@@ -1,6 +1,12 @@
 package com.jesil.pokedex.ui.pokemonlist
 
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +16,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -23,9 +30,11 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,10 +50,13 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.imageloading.rememberDrawablePainter
 import com.jesil.pokedex.R
 import com.jesil.pokedex.ui.components.AnimatedProgressIndicator
+import com.jesil.pokedex.ui.components.GoToTop
 import com.jesil.pokedex.ui.components.PokedexEntry
 import com.jesil.pokedex.ui.components.RetrySection
 import com.jesil.pokedex.ui.components.SearchBar
+import com.jesil.pokedex.ui.components.isScrollingUp
 import com.jesil.pokedex.ui.theme.PokedexTheme
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -61,6 +73,15 @@ fun PokemonListScreen(
     val isLoading by remember { viewModel.isLoading }
     val isSearching by remember { viewModel.isSearching }
 
+    val listState = rememberLazyGridState()
+    val scope = rememberCoroutineScope()
+
+    val showButton by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
@@ -76,6 +97,7 @@ fun PokemonListScreen(
                 )
 
                 if (!isLoading && loadError.isEmpty()) {
+                    AnimatedVisibility(visible = listState.isScrollingUp(), enter = slideInVertically(), exit = slideOutVertically()){
                     Spacer(Modifier.height(20.dp))
                     val hintText = remember { mutableStateOf("") }
                     SearchBar(
@@ -86,12 +108,13 @@ fun PokemonListScreen(
                             viewModel.searchPokemonList(hintText.value)
                         }
                     )
+                        }
                 }
 
                 Spacer(Modifier.height(16.dp))
                 LazyVerticalGrid(
                     contentPadding = PaddingValues(16.dp),
-                    state = rememberLazyGridState(),
+                    state = listState,
                     columns = GridCells.Fixed(2),
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -102,8 +125,8 @@ fun PokemonListScreen(
                             }
                             PokedexEntry(
                                 entry = pokemon,
-                                configDominantColor = {
-                                    viewModel.calcSolidDominantColor(it) { color ->
+                                configDominantColor = { drawable ->
+                                    viewModel.calcSolidDominantColor(drawable) { color ->
                                         dominantColor = color
                                     }
                                 },
@@ -135,6 +158,15 @@ fun PokemonListScreen(
                             viewModel.loadPokemonPaginated()
                         }
                     )
+                }
+            }
+            AnimatedVisibility(visible = !listState.isScrollingUp(), enter = fadeIn(), exit = fadeOut()) {
+                GoToTop(
+                    modifier = Modifier.navigationBarsPadding()
+                ) {
+                    scope.launch {
+                        listState.animateScrollToItem(0)
+                    }
                 }
             }
         }

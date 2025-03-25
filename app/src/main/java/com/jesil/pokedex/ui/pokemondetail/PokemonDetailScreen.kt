@@ -76,8 +76,7 @@ fun PokemonDetailScreen(
     navController: NavController,
     pokemonImageSize: Dp = 200.dp
 ) {
-    val imageUrl =
-        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/$pokemonNumber.png"
+    val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/$pokemonNumber.png"
 //    val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonNumber.png"
     val viewModel: PokemonDetailViewModel = koinViewModel()
     val pokemonInfo by produceState<Resource<Pokemon>>(
