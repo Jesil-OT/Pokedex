@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,6 +53,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.request.ImageRequest
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.jesil.pokedex.R
 import com.jesil.pokedex.data.remote.responses.Pokemon
 import com.jesil.pokedex.ui.components.AnimatedProgressIndicator
@@ -76,8 +78,8 @@ fun PokemonDetailScreen(
     navController: NavController,
     pokemonImageSize: Dp = 200.dp
 ) {
-    val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/$pokemonNumber.png"
-//    val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonNumber.png"
+//    val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/$pokemonNumber.png"
+    val imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/$pokemonNumber.png"
     val viewModel: PokemonDetailViewModel = koinViewModel()
     val pokemonInfo by produceState<Resource<Pokemon>>(
         initialValue = Resource.Loading(),
@@ -86,6 +88,9 @@ fun PokemonDetailScreen(
         }
     )
     val imageLoading = remember { mutableStateOf(false) }
+    // for dummy reasons
+    val systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = dominantColor)
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -112,7 +117,7 @@ fun PokemonDetailScreen(
                                         )
                                     )
                                     .background(dominantColor)
-                                    .padding(bottom = 20.dp),
+                                ,
                                 contentAlignment = Alignment.Center,
                                 content = {
                                     if (imageLoading.value) {
@@ -154,6 +159,7 @@ fun PokemonDetailScreen(
                     if (pokemonInfo is Resource.Success) {
                         Column(
                             modifier = Modifier
+                                .consumeWindowInsets(innerPadding)
                                 .padding(innerPadding)
                                 .verticalScroll(rememberScrollState()),
                             content = {

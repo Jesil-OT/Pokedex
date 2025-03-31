@@ -65,7 +65,6 @@ fun PokemonListScreen(
 ) {
     val viewModel: PokemonListViewModel = koinViewModel()
     val defaultDominantColor = MaterialTheme.colorScheme.surface
-    var dominantColor by remember { mutableStateOf(defaultDominantColor) }
 
     val pokemonList by remember { viewModel.pokemonList }
     val endReached by remember { viewModel.endReached }
@@ -125,17 +124,11 @@ fun PokemonListScreen(
                             }
                             PokedexEntry(
                                 entry = pokemon,
-                                configDominantColor = { drawable ->
-                                    viewModel.calcSolidDominantColor(drawable) { color ->
-                                        dominantColor = color
-                                    }
-                                },
-                                onClick = {
+                                onClick = { dominantColor ->
                                     navController.navigate(
                                         "pokemon_detail_screen/${dominantColor.toArgb()}/${pokemon.pokemonName}/${pokemon.number}"
                                     )
                                 },
-                                dominantColor = dominantColor
                             )
                         }
                     }
